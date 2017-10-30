@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>App Chat</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/cursor.css">
+    <link rel="stylesheet" type="text/css" href="css/sb-admin-2.css">
+
+    <style>
+        body {
+            margin-top: 30px;
+
+            background: #C5DDEB;
+        }
+
+        #messageArea {
+            display: none;
+        }
+
+        hr.style5 {
+            background-color: #fff;
+            border-top: 1px dashed #8c8b8b;
+        }
+
+        #chat {
+            background-color: grey;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body onload="now()">
+    <nav class="navbar navbar-inverse bg-inverse navbar-static-top" role="navigation" style="margin: -7px; margin-top: -30px;">
+        <a class="navbar-brand" href="/" style="color: #ff3399;">
+            <kbd style="background-color: pink; color: red">
+                <i class="fa fa-comments" aria-hidden="true"></i>
+            </kbd> Board Chat</a>
+    </nav>
+    <div class="container">
+        <br>
+        <center>
+            <h3>
+                <b>Welcome to
+                    <p></p>
+                    <span style="color: #ff3399">"Ei-ji Chat Application"</span>
+                </b>
+            </h3>
+        </center>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div id="userFormArea" class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <form id="userForm">
+                    <div class="form-group">
+                        <label>Enter your name</label>
+                        <input class="form-control" id="username" name="username" autofocus>
+                        <br>
+                        <label>Enter your room</label>
+                        <input class="form-control" id="room" name="room">
+                        <br>
+                        <center>
+                            <input type="submit" id="copy" class="form-control btn btn-primary" value="Join" onClick="return empty()">
+                        </center>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        <div id="messageArea" class="row">
+            <div class="col-md-4">
+                <div class="well" id="count">
+                    <h3>
+                        <b>User Online:
+                            <kbd style="font-size: 18px; background-color: pink; color: red">
+                                <span id="conunt">
+                                    <span id="online"></span>
+                                </span>
+                            </kbd>
+                        </b>
+                    </h3>
+                    <p></p>
+                    <ul class="list-group" id="users">
+                    </ul>
+                    <hr class="style5">
+                    <span class="list-group-item">Dog
+                        <span style="padding-left:3em"></span>
+                        <i style="background-color: grey; border-radius: 10px;">&nbsp;&nbsp;&nbsp;&nbsp;</i>
+                    </span>
+                    <span class="list-group-item">Cat
+                        <span style="padding-left:3em"></span>
+                        <i style="background-color: grey; border-radius: 10px;">&nbsp;&nbsp;&nbsp;&nbsp;</i>
+                    </span>
+                    <span class="list-group-item">Fox
+                        <span style="padding-left:3em"></span>
+                        <i style="background-color: grey; border-radius: 10px;">&nbsp;&nbsp;&nbsp;&nbsp;</i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <form>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-danger" value="Logout" style='float: right;'>
+                    </div>
+                </form>
+                <center>
+                    <h3 class="page-header">Room:
+                        <span style="color: #ff3399;">
+                            "
+                            <i>
+                                <span id="rooms"></span>
+                            </i> "
+                        </span>
+                    </h3>
+                </center>
+                <div>
+                    <div class="well">
+                        <center>
+                            <strong style="color: blue;">Call center</strong>
+                            <br>
+                            <span id="now"></span>
+                            </b>
+                        </center>
+                    </div>
+                    <div class="chat" id="chat" style="height:430px;width:750px; overflow:scroll;overflow-x:hidden;overflow-y:scroll;">
+                    </div>
+                </div>
+                <form id="messageForm">
+                    <div class="form-group">
+                        <hr class="style5">
+                        <label>Enter Message</label>
+                        <textarea class="form-control" id="message" maxlength="80" autofocus></textarea>
+                        <br>
+                        <input type="submit" id="cc" class="btn btn-success" value="Send Message" onClick="return empty2()">
+                        <button id="test" class="btn btn-warning" onclick="initialize()" style='float: right;'>Send Location</button>
+                    </div>
+                </form>
+                <br>
+                <br>
+                <span id="testes">
+                    <span/>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <nav class="navbar navbar-inverse bg-inverse navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <br>
+        <p style="color: white;" class="m-0 text-center text-white">
+            Copyright &copy; 2017 Chat App Developed by
+            <a style="color: aqua;" target="_blank" href="https://web.facebook.com/JIch01beer" target="_blank">
+                <b>Jirayu Chinnawong
+                    <b>
+            </a>
+        </p>
+    </nav>
+    <script>
+        $(document).ready(function () {
+            $('#copy').click(function () {
+                //console.log("copy");
+                document.querySelector('#rooms').innerHTML = document.querySelector('#room').value;
+                document.getElementById("username").focus();
+            });
+            $('#cc').click(function () {
+                document.getElementById("message").focus();
+                $('#chat').animate({ scrollTop: $('#chat').prop("scrollHeight") }, 2);
+            });
+        });
+
+        function now() {
+            console.log(moment().format('LLLL'));
+            var dates = moment().format('LLLL');
+            document.getElementById("now").innerHTML = "Today: " + dates;
+        }
+
+        function empty() {
+            var x = document.getElementById("username").value;
+            var z = document.getElementById("room").value;
+            if (x == "" || z == "") {
+                alert("Please input your name or room!!!");
+                return false;
+            };
+        }
+
+        function empty2() {
+            var y = document.getElementById("message").value;
+            if (y == "") {
+                alert("Please input your message!!!");
+                return false;
+            };
+        }
+
+        $(function () {
+            var socket = io.connect();
+            var $messageForm = $('#messageForm');
+            var $message = $('#message');
+            var $chat = $('#chat');
+            var $messageArea = $('#messageArea');
+            var $userFormArea = $('#userFormArea');
+            var $userForm = $('#userForm');
+            var $users = $('#users');
+            var $username = $('#username');
+            var $rooms = $('#rooms');
+            var $room = $('#room');
+            var $test = $('#test');
+            var $testes = $('#testes');
+
+            $messageForm.submit(function (e) {
+                e.preventDefault();
+                console.log("submitted");
+                socket.emit('send message', $message.val());
+                $message.val('');
+            });
+
+            $test.click(function (e) {
+                e.preventDefault();
+                console.log("submitted");
+                socket.emit('get map', $testes.html());
+            });
+
+            socket.on('new message', function (data) {
+                $chat.append('<div class="well">' +
+                    '<strong>' + data.user + '</strong>: '
+                    + data.msg + '<br>' +
+                    "<span style='float: right; padding-left:40px;'>send:" + data.date + '</span><br>' +
+                    '</div>');
+                $('#chat').animate({ scrollTop: $('#chat').prop("scrollHeight") }, 2);
+            });
+
+            socket.on('new map', function (data) {
+                $chat.append('<div class="well">' +
+                    '<strong>' + data.user + '</strong>: ' +
+                    data.addr + '<br>' +
+                    "<span style='float: right; padding-left:40px;'>send:" + data.date + '</span><br>' +
+                    '</div>');
+                $('#chat').animate({ scrollTop: $('#chat').prop("scrollHeight") }, 2);
+            });
+
+            $userForm.submit(function (e) {
+                e.preventDefault();
+                //console.log("submitted");
+                socket.emit('new user', $username.val(), function (data) {
+                    if (data) {
+                        $userFormArea.hide();
+                        $messageArea.show();
+                    }
+                });
+                socket.emit('new room', $room.val(), function (data) {
+                    if (data) {
+                        $userFormArea.hide();
+                        $messageArea.show();
+                    }
+                });
+                $username.val('');
+                $room.val('');
+            });
+
+            socket.on('get users', function (data) {
+                var html = '';
+                for (var i = 0; i < data.length; i++) {
+                    html += '<li class="list-group-item">' +
+                        data[i] +
+                        '<span style="padding-left:3em"></span>' +
+                        '<i style="background-color: greenyellow; border-radius: 10px;">' +
+                        '&nbsp;&nbsp;&nbsp;&nbsp;</i></span> ' +
+                        '</li>';
+
+                }
+                $users.html(html);
+
+                var div = document.getElementById("count");
+                var nodelist = div.getElementsByTagName("li");
+                document.getElementById("online").innerHTML = nodelist.length;
+
+                if (nodelist.length == 1) {
+                    console.log("1");
+                } else {
+                    console.log("2 3 4");
+                }
+            });
+        });
+
+
+        var geocoder;
+        var map;
+        function initialize() {
+            var geocoder = new google.maps.Geocoder();
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
+            }
+            function successFunction(position) {
+                var lat = position.coords.latitude;
+                var lng = position.coords.longitude;
+                codeLatLng(lat, lng)
+            }
+            function errorFunction() {
+                console.log("Geocoder failed");
+            }
+            function initialize() {
+                geocoder = new google.maps.Geocoder();
+            }
+            function codeLatLng(lat, lng) {
+                var latlng = new google.maps.LatLng(lat, lng);
+                geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        console.log("[1] " + results)
+                        if (results[1]) {
+                            var mapOptions = {
+                                center: new google.maps.LatLng(-34.397, 100.644),
+                                zoom: 15,
+                                mapTypeId: google.maps.MapTypeId.ROADMAP
+                            };
+                            map = new google.maps.Map(document.getElementById("map_canvas"),
+                                mapOptions);
+                            geocoder = new google.maps.Geocoder();
+                            console.log("[2] " + results[0].formatted_address)
+                            geocoder.geocode({ 'address': results[0].formatted_address }, function (results, status) {
+                                if (status == google.maps.GeocoderStatus.OK) {
+                                    map.setCenter(results[0].geometry.location);
+                                    var marker = new google.maps.Marker({
+                                        map: map,
+                                        position: results[0].geometry.location
+                                    });
+                                }
+                            });
+                            for (var i = 0; i < results[0].address_components.length; i++) {
+                                for (var b = 0; b < results[0].address_components[i].types.length; b++) {
+                                    if (results[0].address_components[i].types[b] == "administrative_area_level_1") {
+                                        city = results[0].address_components[i];
+                                        break;
+                                    }
+                                }
+                            }
+                            console.log("[3] " + city.short_name + " " + city.long_name)
+                        } else {
+                            console.log("No results found");
+                        }
+                    } else {
+                        console.log("Geocoder failed due to: " + status);
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>
