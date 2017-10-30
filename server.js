@@ -7,8 +7,8 @@ var path = require('path')
 
 users = [];
 connections = [];
-server.listen(process.env.PORT || 7777);
-console.log('Server running port is 7777');
+server.listen(process.env.PORT || 8888);
+console.log('Server running port is 8888');
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', function (req, res) {
