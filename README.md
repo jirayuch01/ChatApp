@@ -2,7 +2,7 @@
 Project with NodeJS
 
 # Page
-Homepage:   <br>
+Homepage: https://eiji-chatapp.herokuapp.com <br>
 Git: https://github.com/jirayuch01/ChatApp   
 
 # Reference
