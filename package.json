@@ -26,7 +26,6 @@
     "path": "^0.12.7",
     "socket.io": "^2.0.4"
   },
-  "main": "moment.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jirayuch01/ChatApp.git"
