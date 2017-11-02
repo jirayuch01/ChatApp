@@ -1,0 +1,3 @@
+Mr. Jirayu Chinnawong 5730211011 IT
+Homepage: https://eiji-chatapp.herokuapp.com
+Git: https://github.com/jirayuch01/ChatApp   
